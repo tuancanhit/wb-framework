@@ -14,9 +14,9 @@ function dbConnector()
 {
     $dbConfigs = config('database');
     try {
-        $instance = DBConnectResolver::getInstance();
+        $connector = DBConnectResolver::getInstance();
     } catch (SystemInitFailureException $e) {
-        $instance = (new DBConnectResolver($dbConfigs));
+        $connector = (new DBConnectResolver($dbConfigs));
     }
-    return $instance->getConnector();
+    return $connector;
 }

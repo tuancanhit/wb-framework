@@ -6,7 +6,6 @@ use William\Base\Model\AbstractInstance;
 
 /**
  * Class Request
- *
  * @method array getServer()
  * @method array getCookie()
  * @method array getRequest()
@@ -19,6 +18,7 @@ class Request extends AbstractInstance implements RequestInterface
     const GET = 'GET';
     const POST = 'POST';
     const PUT = 'PUT';
+    const DELETE = 'DELETE';
 
     /** @var array */
     protected $request = [];
@@ -90,5 +90,27 @@ class Request extends AbstractInstance implements RequestInterface
             return $matches[0];
         }
         return null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullPath()
+    {
+        $path = array_values(
+            array_filter(
+                explode('/', $this->getRequestPath())
+            )
+        );
+        if (count($path) < 1) {
+            $path[0] = 'index';
+        }
+        if (count($path) < 2) {
+            $path[1] = 'index';
+        }
+        if (count($path) < 3) {
+            $path[2] = 'index';
+        }
+        return implode('/', $path);
     }
 }

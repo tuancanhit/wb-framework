@@ -4,6 +4,7 @@ namespace William\Base\Controller;
 
 use William\Base\Api\PageResponse\ResponseInterface as PageResponseInterface;
 use William\Base\Api\RequestResponse\ResponseInterface as RequestResponseInterface;
+use William\Base\DependencyResolver;
 
 /**
  * Class AbstractController
@@ -14,6 +15,7 @@ abstract class AbstractController implements AbstractControllerInterface
 {
     /** @var string */
     protected string $scope = '';
+    protected string $redirect = '';
 
     /** @var Request */
     protected Request $request;
@@ -24,6 +26,24 @@ abstract class AbstractController implements AbstractControllerInterface
     public function __construct(Request $request)
     {
         $this->request = $request;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRedirect(): string
+    {
+        return $this->redirect;
+    }
+
+    /**
+     * @param string $redirect
+     * @return $this
+     */
+    public function setRedirect(string $redirect)
+    {
+        $this->redirect = $redirect;
+        return $this;
     }
 
     /**
@@ -58,8 +78,17 @@ abstract class AbstractController implements AbstractControllerInterface
         $result = $this->execute();
         $this->afterExecute();
         if ($result instanceof PageResponseInterface) {
-            $vars = $result->getVars();
-            include $this->getTemplatePath($result->getTemplate());
+            if ($this->getRedirect()) {
+                (new DependencyResolver())
+                    ->resolve($this->getRedirect())
+                    ->launch();
+            } else {
+                if (!$result->getTemplate()) {
+                    return;
+                }
+                $vars = $result->getVars();
+                include $this->getTemplatePath($result->getTemplate());
+            }
             return;
         }
         if ($result instanceof RequestResponseInterface) {

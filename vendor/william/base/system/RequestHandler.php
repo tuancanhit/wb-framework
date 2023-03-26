@@ -13,6 +13,14 @@ use William\Base\Exception\RouteNotFoundException;
  */
 class RequestHandler
 {
+    /** @var DependencyResolver  */
+    protected DependencyResolver $dependencyResolver;
+
+    public function __construct()
+    {
+        $this->dependencyResolver = new DependencyResolver();
+    }
+
     /**
      * @param RequestInterface $request
      * @return void
@@ -24,13 +32,13 @@ class RequestHandler
         try {
             $handler = getRequestHandler($request);
             /** @var AbstractControllerInterface $controller */
-            $controller = (new DependencyResolver())->resolve($handler);
+            $controller = $this->dependencyResolver->resolve($handler);
             $controller->launch();
         } catch (\Exception|TypeError|Throwable $e) {
             if (config('debug')) {
                 throw $e;
             }
-            $this->redirectPageNotFound();
+            $this->redirectPageNotFound($request);
         }
     }
 
@@ -38,8 +46,12 @@ class RequestHandler
      * @return void
      * @throws Exception
      */
-    protected function redirectPageNotFound()
+    protected function redirectPageNotFound(RequestInterface $request)
     {
-        (new AbstractFrontendController())->launch();
+        if (config('site.notfound')) {
+            $this->dependencyResolver->resolve(config('site.notfound'))->launch();
+            return;
+        }
+        (new AbstractFrontendController($request))->launch();
     }
 }

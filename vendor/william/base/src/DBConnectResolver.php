@@ -26,16 +26,7 @@ class DBConnectResolver
     public function __construct(array $configs = [])
     {
         $this->configs = $configs;
-        self::$_instance = $this;
-    }
-
-    /**
-     * @return DbConnectorInterface
-     * @throws SystemInitFailureException
-     */
-    public function getConnector()
-    {
-        return new DbConnector($this->configs);
+        self::$_instance = new DbConnector($this->configs);
     }
 
     /**

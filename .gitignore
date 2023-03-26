@@ -1,2 +1,5 @@
-/vendor/*
+/.idea/*
+/vendor/composer/
+/vendor/autoload.php
 !/vendor/william/*
+!/vendor/william/base/*

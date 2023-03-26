@@ -9,7 +9,8 @@ return [
         'password' => 'admin@123',
     ],
     'site' => [
-        'base_url' => 'https://sample.local'
+        'base_url' => 'https://sample.local',
+        'notfound' => ''
     ],
-    'debug' => true
+    'debug' => false
 ];
