@@ -1,0 +1,15 @@
+{
+    "name": "william/base",
+    "autoload": {
+        "psr-4": {
+            "William\\Base\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Nguyen Tuan Canh",
+            "email": "tuancanhit@gmail.com"
+        }
+    ],
+    "require": {}
+}

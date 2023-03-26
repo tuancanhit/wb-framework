@@ -1,0 +1,25 @@
+{
+    "name": "william/wb",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "William\\Wb\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Nguyen Tuan Canh",
+            "email": "tuancanhit@gmail.com"
+        }
+    ],
+    "require": {
+        "william/base": "*"
+    },
+    "repositories": {
+        "william/base": {
+            "type": "path",
+            "url": "vendor/william/base"
+        }
+    },
+    "minimum-stability": "dev"
+}
