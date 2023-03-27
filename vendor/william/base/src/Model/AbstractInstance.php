@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace William\Base\Model;
 
+use William\Base\DependencyResolver;
+
 /**
  * Class AbstractInstance
  *
@@ -15,7 +17,7 @@ class AbstractInstance extends \William\Base\Model\DataObject
      */
     public function create()
     {
-        return new $this;
+        return (new DependencyResolver())->resolve(get_class($this));
     }
 
 //    /**

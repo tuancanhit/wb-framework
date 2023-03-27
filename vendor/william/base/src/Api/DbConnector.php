@@ -12,7 +12,11 @@ use William\Base\Exception\SystemInitFailureException;
  */
 class DbConnector implements DbConnectorInterface
 {
+    /** @var \mysqli|null  */
     private ?\mysqli $connect;
+
+    /** @var DbConnector|null  */
+    private static ?DbConnector $_instance = null;
 
     /**
      * @throws SystemInitFailureException
@@ -28,6 +32,18 @@ class DbConnector implements DbConnectorInterface
         if ($this->connect->connect_error) {
             throw new SystemInitFailureException('Can not connect mysql');
         }
+        self::$_instance = $this;
+    }
+
+    /**
+     * @throws SystemInitFailureException
+     */
+    public static function getInstance()
+    {
+        if (null == self::$_instance) {
+            throw new SystemInitFailureException('Must init system first');
+        }
+        return self::$_instance;
     }
 
     /**

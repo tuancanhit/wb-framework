@@ -13,7 +13,7 @@ use William\Base\Exception\RouteNotFoundException;
  */
 class RequestHandler
 {
-    /** @var DependencyResolver  */
+    /** @var DependencyResolver */
     protected DependencyResolver $dependencyResolver;
 
     public function __construct()
@@ -30,7 +30,7 @@ class RequestHandler
     public function run(RequestInterface $request)
     {
         try {
-            $handler = getRequestHandler($request);
+            $handler = get_request_handler($request);
             /** @var AbstractControllerInterface $controller */
             $controller = $this->dependencyResolver->resolve($handler);
             $controller->launch();

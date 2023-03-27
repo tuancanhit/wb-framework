@@ -16,7 +16,7 @@ abstract class AbstractDb extends \William\Base\Model\AbstractInstance
     /**
      * @var DbConnector|DbConnectorInterface
      */
-    protected $dbConnector;
+    protected ?DbConnector $dbConnector = null;
 
     /**
      * @var string
@@ -29,7 +29,7 @@ abstract class AbstractDb extends \William\Base\Model\AbstractInstance
     public function __construct(array $data)
     {
         if (null == $this->dbConnector) {
-            $this->dbConnector = dbConnector();
+            $this->dbConnector = db_connector();
         }
         $this->class = get_class($this);
         parent::__construct($data);

@@ -12,8 +12,14 @@ use ReflectionClass;
  */
 class DependencyResolver
 {
+    /** @var array  */
     private $dependencies = [];
 
+    /**
+     * @param string $key
+     * @param object $value
+     * @return void
+     */
     public function addDependency($key, $value)
     {
         $this->dependencies[$key] = $value;
