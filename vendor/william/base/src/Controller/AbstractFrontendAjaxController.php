@@ -9,7 +9,7 @@ use William\Base\Controller\RequestInterface;
 class AbstractFrontendAjaxController extends AbstractController
 {
     /** @var string  */
-    protected string $scope = 'Ajax';
+    protected string $scope = \William\Base\Controller\AbstractControllerInterface::AJAX;
 
     /**
      * @return void

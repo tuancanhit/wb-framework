@@ -7,13 +7,13 @@ use William\Base\Api\PageResponse\ResponseInterface;
 class AbstractFrontendController extends AbstractController
 {
     /** @var string  */
-    protected string $scope = 'Frontend';
+    protected string $scope = \William\Base\Controller\AbstractControllerInterface::FRONT;
 
     /**
      * @return void
      */
     function execute(): ResponseInterface
     {
-        return (new Response())->setVars([])->setTemplate('404.php');
+        return (new Response())->setVars([])->setTemplate('@app::404.php');
     }
 }

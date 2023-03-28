@@ -1,7 +1,8 @@
 <?php
 
 use William\Base\Controller\Request;
-use William\Base\Route\Router;
+
+$root_folder = __DIR__;
 
 require 'vendor/autoload.php';
 require 'vendor/william/base/system/InitConfigHandler.php';

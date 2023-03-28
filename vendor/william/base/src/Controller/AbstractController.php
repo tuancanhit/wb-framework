@@ -4,7 +4,8 @@ namespace William\Base\Controller;
 
 use William\Base\Api\PageResponse\ResponseInterface as PageResponseInterface;
 use William\Base\Api\RequestResponse\ResponseInterface as RequestResponseInterface;
-use William\Base\DependencyResolver;
+use William\Base\Helper\DependencyResolver;
+use William\Base\Helper\TemplateResolver;
 
 /**
  * Class AbstractController
@@ -15,10 +16,15 @@ abstract class AbstractController implements AbstractControllerInterface
 {
     /** @var string */
     protected string $scope = '';
+
+    /** @var string  */
     protected string $redirect = '';
 
     /** @var Request */
     protected Request $request;
+
+    /** @var DependencyResolver */
+    protected ?DependencyResolver $dependencyResolver = null;
 
     /**
      * @param Request $request
@@ -66,7 +72,11 @@ abstract class AbstractController implements AbstractControllerInterface
      */
     protected function getTemplatePath(string $template)
     {
-        return __DIR__ . "../../View/{$this->scope}/{$template}";
+        return $this->getDependencyResolver()
+            ->clearDependencyArgs()
+            ->setDependencyArgs(['scope' => $this->scope])
+            ->resolve(TemplateResolver::class)
+            ->resolve($template);
     }
 
     /**
@@ -79,9 +89,7 @@ abstract class AbstractController implements AbstractControllerInterface
         $this->afterExecute();
         if ($result instanceof PageResponseInterface) {
             if ($this->getRedirect()) {
-                (new DependencyResolver())
-                    ->resolve($this->getRedirect())
-                    ->launch();
+                $this->getDependencyResolver()->resolve($this->getRedirect())->launch();
             } else {
                 if (!$result->getTemplate()) {
                     return;
@@ -92,9 +100,20 @@ abstract class AbstractController implements AbstractControllerInterface
             return;
         }
         if ($result instanceof RequestResponseInterface) {
-            echo $result->toJson();
+            echo $result->makeResponse();
             return;
         }
         throw new \Exception('Register Page Is Incorrect');
+    }
+
+    /**
+     * @return DependencyResolver
+     */
+    private function getDependencyResolver()
+    {
+        if (null === $this->dependencyResolver) {
+            $this->dependencyResolver = new DependencyResolver();
+        }
+        return $this->dependencyResolver;
     }
 }

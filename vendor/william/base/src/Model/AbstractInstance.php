@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace William\Base\Model;
 
-use William\Base\DependencyResolver;
+use William\Base\Helper\DependencyResolver;
 
 /**
  * Class AbstractInstance

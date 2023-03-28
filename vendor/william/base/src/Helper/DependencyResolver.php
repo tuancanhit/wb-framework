@@ -1,6 +1,6 @@
 <?php
 
-namespace William\Base;
+namespace William\Base\Helper;
 
 use Exception;
 use ReflectionClass;
@@ -12,17 +12,36 @@ use ReflectionClass;
  */
 class DependencyResolver
 {
-    /** @var array  */
+    /** @var array */
     private $dependencies = [];
 
     /**
      * @param string $key
      * @param object $value
-     * @return void
+     * @return $this
      */
-    public function addDependency($key, $value)
+    public function setDependencyArgs(array $dependencies = [])
     {
-        $this->dependencies[$key] = $value;
+        $this->dependencies = array_merge($this->dependencies, $dependencies);
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function clearDependencyArgs()
+    {
+        $this->dependencies = [];
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function replaceDependencyArgs(string $name, $value)
+    {
+        $this->dependencies[$name] = $value;
+        return $this;
     }
 
     /**
@@ -48,10 +67,12 @@ class DependencyResolver
             } else {
                 $dependencyClass = $parameter->getClass();
                 if (!$dependencyClass) {
-                    $dependencies[] = $parameter->getDefaultValue();
+                    $dependencyValue = $parameter->getDefaultValue();
                 } else {
-                    $dependencies[] = $this->resolve($dependencyClass->getName());
+                    $dependencyValue = $this->resolve($dependencyClass->getName());
                 }
+                $dependencies[] = $dependencyValue;
+                $this->dependencies[$name] = $dependencyValue;
             }
         }
 

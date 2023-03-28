@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-use William\Base\ConfigResolver;
+use William\Base\Helper\ConfigResolver;
 use William\Base\Controller\RequestInterface;
 use William\Base\Exception\RouteNotFoundException;
 use William\Base\Exception\SystemInitFailureException;
 
-$custom_routes = require __DIR__ . '/../../../../src/Route/web.php';
-$base_routes = require __DIR__ . '/../src/Route/web.php';
+$custom_routes = require $root_folder . '/src/route/web.php';
+$base_routes   = require $root_folder . '/vendor/william/base/src/route/web.php';
 
 /**
  * @param RequestInterface $request
@@ -25,4 +25,14 @@ function get_request_handler(RequestInterface $request)
         throw new RouteNotFoundException('Route not found');
     }
     return $routes[$path][$request->getMethod()];
+}
+
+/**
+ * @param string $path
+ * @param string $type
+ * @return string
+ */
+function asset(string $path, string $type)
+{
+    return sprintf('%s/pub/%s/%s', config('site.base_url'), $type, $path);
 }

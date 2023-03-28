@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace William\Base;
+namespace William\Base\Helper;
 
 use William\Base\Exception\SystemInitFailureException;
 
