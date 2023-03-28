@@ -5,7 +5,7 @@ declare(strict_types=1);
 use William\Base\Controller\AbstractControllerInterface;
 use William\Base\Controller\AbstractFrontendController;
 use William\Base\Controller\RequestInterface;
-use William\Base\DependencyResolver;
+use William\Base\Helper\DependencyResolver;
 use William\Base\Exception\RouteNotFoundException;
 
 /**

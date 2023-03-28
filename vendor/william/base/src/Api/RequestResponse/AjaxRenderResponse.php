@@ -11,24 +11,13 @@ use William\Base\Model\AbstractInstance;
  * @api
  * @package William\Base\Api\RequestResponse
  */
-class Response extends AbstractInstance implements ResponseInterface
+class AjaxRenderResponse extends Response
 {
     /**
      * @return bool
      */
     public function isAjaxRender(): bool
     {
-        return false;
-    }
-
-    /**
-     * @return string
-     */
-    public function makeResponse()
-    {
-        if ($this->isAjaxRender()) {
-            return $this->toJson();
-        }
-        return $this->getData();
+        return true;
     }
 }

@@ -17,8 +17,6 @@ class Index extends AbstractFrontendController
      */
     function execute(): ResponseInterface
     {
-        echo "<pre>";
-        print_r([$this->request->getFullPath()]);
-        die;
+
     }
 }

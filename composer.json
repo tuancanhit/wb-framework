@@ -13,7 +13,8 @@
         }
     ],
     "require": {
-        "william/base": "*"
+        "william/base": "*",
+        "guzzlehttp/guzzle": "^7.5@dev"
     },
     "repositories": {
         "william/base": {
