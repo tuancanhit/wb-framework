@@ -2,7 +2,8 @@
 
 namespace William\Wb\Controller\Home;
 
-use William\Base\Api\PageResponse\ResponseInterface;
+use William\Base\Api\PageResponse\ResponseInterface as PageResponseInterface;
+use William\Base\Api\RequestResponse\ResponseInterface as RequestResponseInterface;
 use William\Base\Controller\AbstractFrontendController;
 
 /**
@@ -13,9 +14,9 @@ use William\Base\Controller\AbstractFrontendController;
 class Index extends AbstractFrontendController
 {
     /**
-     * @return ResponseInterface
+     * @return PageResponseInterface|RequestResponseInterface|\William\Base\Block\BlockInterface
      */
-    function execute(): ResponseInterface
+    function execute()
     {
 
     }

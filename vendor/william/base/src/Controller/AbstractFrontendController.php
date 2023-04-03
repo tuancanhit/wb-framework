@@ -3,16 +3,15 @@
 namespace William\Base\Controller;
 use William\Base\Api\PageResponse\Response;
 use William\Base\Api\PageResponse\ResponseInterface;
+use William\Base\Api\PageResponse\ResponseInterface as PageResponseInterface;
+use William\Base\Api\RequestResponse\ResponseInterface as RequestResponseInterface;
 
 class AbstractFrontendController extends AbstractController
 {
-    /** @var string  */
-    protected string $scope = \William\Base\Controller\AbstractControllerInterface::FRONT;
-
     /**
-     * @return void
+     * @return PageResponseInterface|RequestResponseInterface|\William\Base\Block\BlockInterface
      */
-    function execute(): ResponseInterface
+    function execute()
     {
         return (new Response())->setVars([])->setTemplate('@app::404.php');
     }

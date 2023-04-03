@@ -24,69 +24,82 @@ server {
     }
 
     location / {
-         try_files $uri $uri/ /index.php?$args;
+        try_files $uri $uri/ /index.php$is_args$args;
     }
 
-    location /pub/css {
-        root $WB_ROOT/src;
-        # Serve static files directly
-        try_files $uri =404;
+    location /pub {
+           location /css {
+               root $WB_ROOT;
+               # Serve static files directly
+               try_files $uri =404;
 
-        # Set cache expiry time to 1 hour
-        expires 1h;
+               # Set cache expiry time to 1 hour
+               expires 1h;
 
-        # Set appropriate MIME type
-        add_header Content-Type "text/css";
+               # Set appropriate MIME type
+               add_header Content-Type "text/css";
 
-        # Enable caching for this location
-        add_header Cache-Control "public, max-age=3600";
+               # Enable caching for this location
+               add_header Cache-Control "public, max-age=3600";
 
-        # Disable access logging
-        access_log off;
+               # Disable access logging
+               access_log off;
+           }
+
+           location /js {
+                root $WB_ROOT;
+                # Serve static files directly
+                try_files $uri =404;
+
+                # Set cache expiry time to 1 hour
+                expires 1h;
+
+                # Set appropriate MIME type
+                add_header Content-Type "application/javascript";
+
+                # Enable caching for this location
+                add_header Cache-Control "public, max-age=3600";
+
+                # Disable access logging
+                access_log off;
+           }
+           location /media {
+               # Serve static files directly
+               try_files $uri =404;
+
+               # Set cache expiry time to 1 hour
+               expires 1h;
+
+               # Set appropriate MIME type based on file extension
+               types {
+                   image/jpeg jpg;
+                   image/png png;
+                   video/mp4 mp4;
+                   audio/mpeg mp3;
+                   # Add more MIME types as needed
+               }
+
+               # Enable caching for this location
+               add_header Cache-Control "public, max-age=3600";
+
+               # Disable access logging
+               access_log off;
+           }
     }
 
-    location /pub/js {
-        root $WB_ROOT/src;
-        # Serve static files directly
-        try_files $uri =404;
-
-        # Set cache expiry time to 1 hour
-        expires 1h;
-
-        # Set appropriate MIME type
-        add_header Content-Type "application/javascript";
-
-        # Enable caching for this location
-        add_header Cache-Control "public, max-age=3600";
-
-        # Disable access logging
-        access_log off;
+    location /pub {
+        deny all;
     }
 
-    location /pub/media {
-        # Serve static files directly
-        try_files $uri =404;
-
-        # Set cache expiry time to 1 hour
-        expires 1h;
-
-        # Set appropriate MIME type based on file extension
-        types {
-            image/jpeg jpg;
-            image/png png;
-            video/mp4 mp4;
-            audio/mpeg mp3;
-            # Add more MIME types as needed
-        }
-
-        # Enable caching for this location
-        add_header Cache-Control "public, max-age=3600";
-
-        # Disable access logging
-        access_log off;
+    location /pub/downloadable {
+        deny all;
     }
 
     location ~ /\.ht {
-      deny all;
+        deny all;
+    }
+
+    location ~* (\.php$|\.phtml$|\.htaccess$|\.git) {
+        deny all;
     }
 }

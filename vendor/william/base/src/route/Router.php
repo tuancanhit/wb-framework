@@ -7,30 +7,35 @@ use William\Base\Model\AbstractInstance;
 
 /**
  * Class Router
+ * @method Router get(string $route, string $handler)
+ * @method Router post(string $route, string $handler)
+ * @method Router put(string $route, string $handler)
+ * @method Router delete(string $route, string $handler)
  *
  * @package William\Base\Route
  */
 class Router extends AbstractInstance
 {
     /**
-     * @var array 
+     * @var array
      */
     protected $routes = [];
 
     /**
-     * @param string $route
-     * @param string $handler
-     * @return $this
+     * @param string $method
+     * @param array  $args
+     * @return $this|array|bool|mixed|null
      * @throws \Exception
      */
-    public function get(string $route, string $handler)
+    public function __call($method, $args)
     {
-        $method = Request::GET;
-        if (isset($this->routes[$route][$method])) {
-            throw new \Exception('Route already existed');
+        $methods = [Request::GET, Request::POST, Request::PUT, Request::DELETE];
+        $methods = array_map('strtolower', $methods);
+        $method  = strtolower($method);
+        if (!in_array($method, $methods)) {
+            throw new \Exception(sprintf('Method not found in %s', get_class($this)));
         }
-        $this->routes[$route][$method] = $handler;
-        return $this;
+        return $this->addRoute($method, ...$args);
     }
 
     /**
@@ -39,41 +44,9 @@ class Router extends AbstractInstance
      * @return $this
      * @throws \Exception
      */
-    public function post(string $route, string $handler)
+    protected function addRoute(string $method, string $route, string $handler)
     {
-        $method = Request::POST;
-        if (isset($this->routes[$route][$method])) {
-            throw new \Exception('Route already existed');
-        }
-        $this->routes[$route][$method] = $handler;
-        return $this;
-    }
-
-    /**
-     * @param string $route
-     * @param string $handler
-     * @return $this
-     * @throws \Exception
-     */
-    public function put(string $route, string $handler)
-    {
-        $method = Request::PUT;
-        if (isset($this->routes[$route][$method])) {
-            throw new \Exception('Route already existed');
-        }
-        $this->routes[$route][$method] = $handler;
-        return $this;
-    }
-
-    /**
-     * @param string $route
-     * @param string $handler
-     * @return $this
-     * @throws \Exception
-     */
-    public function delete(string $route, string $handler)
-    {
-        $method = Request::DELETE;
+        $route = self::buildFullPath($route);
         if (isset($this->routes[$route][$method])) {
             throw new \Exception('Route already existed');
         }
@@ -101,5 +74,28 @@ class Router extends AbstractInstance
     public function getRoutes()
     {
         return $this->routes;
+    }
+
+    /**
+     * @param string $path
+     * @return string
+     */
+    public static function buildFullPath(string $path)
+    {
+        $path = array_values(
+            array_filter(
+                explode('/', $path)
+            )
+        );
+        if (count($path) < 1) {
+            $path[0] = 'index';
+        }
+        if (count($path) < 2) {
+            $path[1] = 'index';
+        }
+        if (count($path) < 3) {
+            $path[2] = 'index';
+        }
+        return implode('/', $path);
     }
 }

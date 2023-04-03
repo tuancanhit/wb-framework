@@ -30,10 +30,14 @@ class RequestHandler
     public function run(RequestInterface $request)
     {
         try {
+            (new \William\Base\Helper\ScopeResolver($request->getScope()));
             $handler = get_request_handler($request);
             /** @var AbstractControllerInterface $controller */
             $controller = $this->dependencyResolver->resolve($handler);
-            $controller->launch();
+            $result = $controller->launch();
+            if ($result) {
+                echo $result;
+            }
         } catch (\Exception|TypeError|Throwable $e) {
             if (config('debug')) {
                 throw $e;

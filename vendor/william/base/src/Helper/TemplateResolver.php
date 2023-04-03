@@ -25,15 +25,22 @@ class TemplateResolver
     /**
      * @param array $configs
      */
-    public function __construct(string $scope)
+    public function __construct(string $scope = '')
     {
+        $scope = $scope ? $scope : \William\Base\Helper\ScopeResolver::getInstance()->getScope();
+        if (!$scope) {
+            throw new SystemInitFailureException('Scope not found');
+        }
         $this->mappings = [
-            self::$_appTplPrefix  => sprintf('%s/src/view/%s/', config('root_folder'), $scope),
+            self::$_appTplPrefix => sprintf('%s/src/view/%s/', config('root_folder'), $scope),
             self::$_coreTplPrefix => sprintf('%s/vendor/william/base/src/view/%s/', config('root_folder'), $scope)
         ];
-        if (config('tmpl')) {
-            $this->mappings = array_merge($this->mappings, config('tmpl'));
+
+        $tmpl = config('tmpl');
+        if (is_array($tmpl)) {
+            $this->mappings = array_merge($this->mappings, $tmpl);
         }
+        uksort($this->mappings, [$this, 'strLenghtCompare']);
         self::$_instance = $this;
     }
 
@@ -43,7 +50,7 @@ class TemplateResolver
     public static function getInstance()
     {
         if (null == self::$_instance) {
-            throw new SystemInitFailureException('Must init system first');
+            throw new SystemInitFailureException('System have not int already');
         }
         return self::$_instance;
     }
@@ -75,5 +82,15 @@ class TemplateResolver
             }
         }
         throw new \Exception('Template area not found');
+    }
+
+    /**
+     * @param string $a
+     * @param string $b
+     * @return bool
+     */
+    public function strLenghtCompare($a, $b)
+    {
+        return strlen($a) < strlen($b);
     }
 }

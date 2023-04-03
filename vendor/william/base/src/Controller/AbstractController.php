@@ -15,10 +15,10 @@ use William\Base\Helper\TemplateResolver;
 abstract class AbstractController implements AbstractControllerInterface
 {
     /** @var string */
-    protected string $scope = '';
-
-    /** @var string  */
     protected string $redirect = '';
+
+    /** @var string */
+    protected string $prefix = '';
 
     /** @var Request */
     protected Request $request;
@@ -32,6 +32,14 @@ abstract class AbstractController implements AbstractControllerInterface
     public function __construct(Request $request)
     {
         $this->request = $request;
+    }
+
+    /**
+     * @return RequestInterface
+     */
+    public function getRequest()
+    {
+        return $this->request;
     }
 
     /**
@@ -53,30 +61,41 @@ abstract class AbstractController implements AbstractControllerInterface
     }
 
     /**
-     * @return PageResponseInterface|RequestResponseInterface
+     * @return PageResponseInterface|RequestResponseInterface|\William\Base\Block\BlockInterface
      */
     abstract function execute();
 
     /**
-     * @return void
-     */
-    protected function beforeExecute(){}
-
-    /**
-     * @return void
-     */
-    protected function afterExecute(){}
-
-    /**
      * @return string
      */
-    protected function getTemplatePath(string $template)
+    protected function getEventPrefix()
     {
-        return $this->getDependencyResolver()
-            ->clearDependencyArgs()
-            ->setDependencyArgs(['scope' => $this->scope])
-            ->resolve(TemplateResolver::class)
-            ->resolve($template);
+        if (!$this->prefix) {
+            $this->prefix = str_replace('/', '_', $this->request->getFullPath());
+        }
+        return $this->prefix;
+    }
+
+    /**
+     * @return void
+     */
+    protected function beforeExecute()
+    {
+        $func = $this->getEventPrefix() . '_before_execute_controller';
+        if (function_exists($func) && is_callable($func)) {
+            $func($this);
+        }
+    }
+
+    /**
+     * @return void
+     */
+    protected function afterExecute()
+    {
+        $func = $this->getEventPrefix() . '_after_execute_controller';
+        if (function_exists($func) && is_callable($func)) {
+            $func($this);
+        }
     }
 
     /**
@@ -87,23 +106,21 @@ abstract class AbstractController implements AbstractControllerInterface
         $this->beforeExecute();
         $result = $this->execute();
         $this->afterExecute();
-        if ($result instanceof PageResponseInterface) {
-            if ($this->getRedirect()) {
-                $this->getDependencyResolver()->resolve($this->getRedirect())->launch();
-            } else {
-                if (!$result->getTemplate()) {
-                    return;
-                }
-                $vars = $result->getVars();
-                include $this->getTemplatePath($result->getTemplate());
-            }
-            return;
+
+        if ($this->getRedirect()) {
+            header(sprintf('Location: %s', $this->getRedirect()), true, 302);
+            exit();
         }
+
+        if ($result instanceof PageResponseInterface || $result instanceof \William\Base\Block\BlockInterface) {
+            return $result->toHtml();
+        }
+
         if ($result instanceof RequestResponseInterface) {
-            echo $result->makeResponse();
-            return;
+            return $result->makeResponse();
         }
-        throw new \Exception('Register Page Is Incorrect');
+
+        throw new \Exception('Register Page is incorrect');
     }
 
     /**

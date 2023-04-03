@@ -8,6 +8,7 @@ use William\Base\Exception\SystemInitFailureException;
 
 $custom_routes = require $root_folder . '/src/route/web.php';
 $base_routes   = require $root_folder . '/vendor/william/base/src/route/web.php';
+$route_list    = array_merge($base_routes, $custom_routes);
 
 /**
  * @param RequestInterface $request
@@ -16,15 +17,13 @@ $base_routes   = require $root_folder . '/vendor/william/base/src/route/web.php'
  */
 function get_request_handler(RequestInterface $request)
 {
-    global $base_routes;
-    global $custom_routes;
-    $routes = array_merge($custom_routes, $base_routes);
-
+    global $route_list;
     $path = $request->getFullPath();
-    if (!$path || !isset($routes[$path][$request->getMethod()])) {
+    $method = strtolower($request->getMethod());
+    if (!$path || !isset($route_list[$path][$method])) {
         throw new RouteNotFoundException('Route not found');
     }
-    return $routes[$path][$request->getMethod()];
+    return $route_list[$path][$method];
 }
 
 /**

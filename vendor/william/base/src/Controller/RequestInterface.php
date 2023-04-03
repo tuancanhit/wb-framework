@@ -15,4 +15,5 @@ interface RequestInterface
     public function getMethod();
     public function getRequestPath();
     public function getFullPath();
+    public function getScope();
 }

@@ -12,7 +12,8 @@ namespace William\Base\Api\PageResponse;
 interface ResponseInterface
 {
     public function setVars(array $vars = []);
-    public function setTemplate(string $template);
+    public function setTemplate($template);
     public function getVars();
     public function getTemplate();
+    public function toHtml();
 }
