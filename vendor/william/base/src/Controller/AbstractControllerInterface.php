@@ -17,4 +17,5 @@ interface AbstractControllerInterface
     public function launch();
     public function setRedirect(string $handler);
     public function getRedirect();
+    public function getRequest();
 }

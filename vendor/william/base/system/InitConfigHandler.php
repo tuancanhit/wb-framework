@@ -22,3 +22,16 @@ function config(string $path)
     }
     return $connector->config($path);
 }
+
+function urlBuild(string $route)
+{
+    global $configs;
+    if ($route[0] == '/') {
+        $route = ltrim($route, $route[0]);
+    }
+    $baseUrl = $configs['site']['base_url'] ?? '/';
+    if ($baseUrl[strlen($baseUrl) - 1] != '/') {
+        $baseUrl = sprintf('%s/', $baseUrl);
+    }
+    return sprintf('%s%s', $baseUrl, $route);
+}

@@ -2,6 +2,7 @@
 
 namespace William\Wb\Controller\Base;
 
+use William\Base\Api\PageResponse\ResponseInterface;
 use William\Base\Controller\AbstractFrontendController;
 
 /**
@@ -11,5 +12,11 @@ use William\Base\Controller\AbstractFrontendController;
  */
 class BaseController extends AbstractFrontendController
 {
-
+    /**
+     * @return ResponseInterface
+     */
+    public function execute(): ResponseInterface
+    {
+        return parent::execute();
+    }
 }

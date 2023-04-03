@@ -97,20 +97,14 @@ class Request extends AbstractInstance implements RequestInterface
      */
     public function getFullPath()
     {
-        $path = array_values(
-            array_filter(
-                explode('/', $this->getRequestPath())
-            )
-        );
-        if (count($path) < 1) {
-            $path[0] = 'index';
-        }
-        if (count($path) < 2) {
-            $path[1] = 'index';
-        }
-        if (count($path) < 3) {
-            $path[2] = 'index';
-        }
-        return implode('/', $path);
+        return \William\Base\Route\Router::buildFullPath($this->getRequestPath());
+    }
+
+    /**
+     * @return void
+     */
+    public function getScope()
+    {
+        return AbstractFrontendController::FRONT;
     }
 }

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace William\Base\Api\PageResponse;
 
+use William\Base\Api\AbstractResponse;
+use William\Base\Helper\TemplateResolver;
 use William\Base\Model\AbstractInstance;
 use William\Base\Model\DataObject;
 
@@ -12,7 +14,7 @@ use William\Base\Model\DataObject;
  * @api
  * @package William\Base\Api\PageResponse
  */
-class Response extends AbstractInstance implements ResponseInterface
+class Response extends AbstractResponse implements ResponseInterface
 {
     /**
      * @param array $vars
@@ -25,10 +27,10 @@ class Response extends AbstractInstance implements ResponseInterface
     }
 
     /**
-     * @param string $template
+     * @param string|array $template
      * @return $this
      */
-    public function setTemplate(string $template)
+    public function setTemplate($template)
     {
         $this->setData('template', $template);
         return $this;
@@ -43,10 +45,33 @@ class Response extends AbstractInstance implements ResponseInterface
     }
 
     /**
-     * @return $this
+     * @return string|array
      */
     public function getTemplate()
     {
         return $this->getData('template');
+    }
+
+
+    /**
+     * @return false|string
+     */
+    public function toHtml()
+    {
+        $template = $this->getTemplate();
+        if (!$template) {
+            return '';
+        }
+        ob_start();
+        $vars = $this->getVars();
+        if (!is_array($template)) {
+            include $this->getTemplatePath($template);
+        } else {
+            foreach ($template as $tmpl) {
+                include $this->getTemplatePath($tmpl);
+            }
+        }
+        $output = ob_get_clean();
+        return $output;
     }
 }
