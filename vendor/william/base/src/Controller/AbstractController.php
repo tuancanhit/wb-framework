@@ -6,6 +6,7 @@ use William\Base\Api\PageResponse\ResponseInterface as PageResponseInterface;
 use William\Base\Api\RequestResponse\ResponseInterface as RequestResponseInterface;
 use William\Base\Helper\DependencyResolver;
 use William\Base\Helper\TemplateResolver;
+use William\Base\Model\DataObject;
 
 /**
  * Class AbstractController
@@ -47,7 +48,10 @@ abstract class AbstractController implements AbstractControllerInterface
      */
     public function getRedirect(): string
     {
-        return $this->redirect;
+        if (!$this->redirect) {
+            return '';
+        }
+        return urlBuild($this->redirect);
     }
 
     /**
@@ -79,22 +83,32 @@ abstract class AbstractController implements AbstractControllerInterface
     /**
      * @return void
      */
-    protected function beforeExecute()
+    protected function beforeExecute(array $events = [])
     {
-        $func = $this->getEventPrefix() . '_before_execute_controller';
-        if (function_exists($func) && is_callable($func)) {
-            $func($this);
+        $funcs = [
+            $this->getEventPrefix() . '_before_execute'
+        ];
+        $funcs = array_merge($funcs, $events);
+        foreach ($funcs as $func) {
+            if (function_exists($func) && is_callable($func)) {
+                $func($this);
+            }
         }
     }
 
     /**
      * @return void
      */
-    protected function afterExecute()
+    protected function afterExecute(array $events = [])
     {
-        $func = $this->getEventPrefix() . '_after_execute_controller';
-        if (function_exists($func) && is_callable($func)) {
-            $func($this);
+        $funcs = [
+            $this->getEventPrefix() . '_after_execute'
+        ];
+        $funcs = array_merge($funcs, $events);
+        foreach ($funcs as $func) {
+            if (function_exists($func) && is_callable($func)) {
+                $func($this);
+            }
         }
     }
 
@@ -120,7 +134,7 @@ abstract class AbstractController implements AbstractControllerInterface
             return $result->makeResponse();
         }
 
-        throw new \Exception('Register Page is incorrect');
+        throw new \Exception('Register page is incorrect');
     }
 
     /**

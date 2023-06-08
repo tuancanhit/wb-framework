@@ -16,15 +16,32 @@ class AbstractResponse extends AbstractInstance
 {
     /** @var DependencyResolver */
     protected ?DependencyResolver $dependencyResolver = null;
+    /** @var TemplateResolver|null */
+    protected ?TemplateResolver $templateResolver = null;
+    /** @var array */
+    protected array $templates = [];
 
     /**
      * @return string
      */
-    protected function getTemplatePath(string $template)
+    public function getTemplatePath(string $template)
     {
-        return $this->getDependencyResolver()
-            ->resolve(TemplateResolver::class)
-            ->resolve($template);
+        if (!isset($this->templates[$template])) {
+            $this->templates[$template] = $this->getTemplateResolver()->resolve($template);
+        }
+        return $this->templates[$template];
+    }
+
+    /**
+     * @return TemplateResolver
+     * @throws \ReflectionException
+     */
+    public function getTemplateResolver()
+    {
+        if (null == $this->templateResolver) {
+            $this->templateResolver = $this->getDependencyResolver()->resolve(TemplateResolver::class);
+        }
+        return $this->templateResolver;
     }
 
     /**
@@ -33,7 +50,7 @@ class AbstractResponse extends AbstractInstance
     protected function getDependencyResolver()
     {
         if (null === $this->dependencyResolver) {
-            $this->dependencyResolver = new DependencyResolver();
+            $this->dependencyResolver = \William\Base\Helper\DependencyResolver::getInstance();
         }
         return $this->dependencyResolver;
     }

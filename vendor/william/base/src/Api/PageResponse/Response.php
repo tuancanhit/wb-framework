@@ -41,7 +41,7 @@ class Response extends AbstractResponse implements ResponseInterface
      */
     public function getVars()
     {
-        return $this->getData('vars');
+        return $this->getData('vars') ?? [];
     }
 
     /**
@@ -63,15 +63,23 @@ class Response extends AbstractResponse implements ResponseInterface
             return '';
         }
         ob_start();
-        $vars = $this->getVars();
-        if (!is_array($template)) {
-            include $this->getTemplatePath($template);
-        } else {
-            foreach ($template as $tmpl) {
-                include $this->getTemplatePath($tmpl);
+        try {
+            $vars = array_merge($this->getVars(), [
+                'block' => $this
+            ]);
+            extract($vars, EXTR_SKIP);
+            if (!is_array($template)) {
+                include $this->getTemplatePath($template);
+            } else {
+                foreach ($template as $tmpl) {
+                    include $this->getTemplatePath($tmpl);
+                }
             }
+            $output = ob_get_clean();
+            return $output;
+        } catch (\Exception | \Throwable | \TypeError $e) {
+            ob_end_clean();
+            throw $e;
         }
-        $output = ob_get_clean();
-        return $output;
     }
 }

@@ -9,6 +9,7 @@ use William\Base\Helper\ScopeResolver;
 
 $root_folder = __DIR__ . '/../';
 
+require $root_folder . '/vendor/autoload.php';
 require $root_folder . '/vendor/william/base/system/InitConfigHandler.php';
 require $root_folder . '/vendor/william/base/system/DbConnectHandler.php';
 
@@ -48,13 +49,13 @@ if (is_callable($command_list[$command])) {
     $command_list[$command]();
     exit();
 }
+(new ScopeResolver(Request::CLI));
 
 if (!class_exists($command_list[$command])) {
     echo "Command not found\n";
     exit();
 }
 
-(new ScopeResolver(Request::CLI));
 $handler = (new DependencyResolver())->resolve($command_list[$command]);
 if (!$handler instanceof CommandInterface) {
     echo "Command register is incorrect\n";

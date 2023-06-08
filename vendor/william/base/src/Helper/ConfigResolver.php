@@ -40,9 +40,12 @@ class ConfigResolver
      * @param string $path
      * @return array|mixed|null
      */
-    public function config(string $path)
+    public function config(string $path = '')
     {
         $config = $this->configs;
+        if (!$path) {
+            return $config;
+        }
         foreach (explode('.', $path) as $node) {
             if (!isset($config[$node])) {
                 return null;

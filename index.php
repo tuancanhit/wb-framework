@@ -1,6 +1,6 @@
 <?php
 
-use William\Base\Controller\Request;
+use William\Base\Framework\Boot;
 
 $root_folder = __DIR__;
 
@@ -21,12 +21,10 @@ try {
 
 require $root_folder . '/vendor/william/base/system/InitConfigHandler.php';
 require $root_folder . '/vendor/william/base/system/RouterHandler.php';
-require $root_folder . '/vendor/william/base/system/RequestHandler.php';
 require $root_folder . '/vendor/william/base/system/DbConnectHandler.php';
 require $root_folder . '/vendor/william/base/src/etc/events.php';
 require $root_folder . '/src/etc/events.php';
 
-$request = new Request();
-if (!$request->isCli()) {
-    (new RequestHandler())->run($request);
-}
+$boot = Boot::create(__DIR__, []);
+$app  = \William\Base\Framework\HttpApplication::create($boot);
+$app->run();

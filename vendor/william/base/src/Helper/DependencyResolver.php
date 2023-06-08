@@ -4,6 +4,7 @@ namespace William\Base\Helper;
 
 use Exception;
 use ReflectionClass;
+use William\Base\Exception\InstanceNotFoundException;
 
 /**
  * Class DependencyResolver
@@ -12,8 +13,31 @@ use ReflectionClass;
  */
 class DependencyResolver
 {
+    /** @var null | $this */
+    public static $_instance = null;
+
     /** @var array */
     private $dependencies = [];
+
+    /** @var \William\Base\Pool\DependencyInjectionPool */
+    private $dependencyPool;
+
+    /** DependencyResolver */
+    public function __construct()
+    {
+        $this->dependencyPool = new \William\Base\Pool\DependencyInjectionPool();
+    }
+
+    /**
+     * @return DependencyResolver|null
+     */
+    public static function getInstance()
+    {
+        if (null == self::$_instance) {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
 
     /**
      * @param string $key
@@ -52,9 +76,25 @@ class DependencyResolver
      */
     public function resolve(string $className)
     {
+        $cachedInstance = $this->getFromPool($className);
+        if (null !== $cachedInstance) {
+            return $cachedInstance;
+        }
+        $instance = $this->_resolve(...func_get_args());
+        $this->dependencyPool->addObject($className, $instance);
+        return $instance;
+    }
+
+    /**
+     * @param string $className
+     * @return mixed|object|null
+     * @throws \ReflectionException
+     * @throws Exception
+     */
+    protected function _resolve(string $className)
+    {
         $reflection = new ReflectionClass($className);
         $constructor = $reflection->getConstructor();
-
         if (!$constructor) {
             return new $className();
         }
@@ -69,7 +109,7 @@ class DependencyResolver
                 if (!$dependencyClass) {
                     $dependencyValue = $parameter->getDefaultValue();
                 } else {
-                    $dependencyValue = $this->resolve($dependencyClass->getName());
+                    $dependencyValue = $this->_resolve($dependencyClass->getName());
                 }
                 $dependencies[] = $dependencyValue;
                 $this->dependencies[$name] = $dependencyValue;
@@ -77,5 +117,18 @@ class DependencyResolver
         }
 
         return $reflection->newInstanceArgs($dependencies);
+    }
+
+    /**
+     * @param string $class
+     * @return object|null
+     */
+    protected function getFromPool(string $class)
+    {
+        try {
+            return $this->dependencyPool->getObject($class);
+        } catch (InstanceNotFoundException $e) {
+            return null;
+        }
     }
 }
