@@ -12,7 +12,7 @@ $tmpl_configs = require $root_folder . '/src/etc/tmpl.php';
 
 $configs = array_merge($base_configs, $app_configs, ['tmpl' => $tmpl_configs], ['root_folder' => $root_folder]);
 
-function config(string $path)
+function config(string $path = '')
 {
     global $configs;
     try {

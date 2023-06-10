@@ -8,7 +8,8 @@ namespace William\Base\Model;
  *
  * @package William\Base\Model
  */
-class DataObject implements \ArrayAccess
+//class DataObject implements \ArrayAccess
+class DataObject
 {
     /**
      * Object attributes

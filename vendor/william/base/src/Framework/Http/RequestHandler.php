@@ -2,23 +2,27 @@
 
 declare(strict_types=1);
 
+namespace William\Base\Framework\Http;
+
 use William\Base\Controller\AbstractControllerInterface;
 use William\Base\Controller\AbstractFrontendController;
 use William\Base\Controller\RequestInterface;
 use William\Base\Helper\DependencyResolver;
 use William\Base\Exception\RouteNotFoundException;
+use William\Base\Model\AbstractInstance;
 
 /**
  * Class RequestHandler
  */
-class RequestHandler
+class RequestHandler extends AbstractInstance
 {
     /** @var DependencyResolver */
     protected DependencyResolver $dependencyResolver;
 
-    public function __construct()
+    public function __construct(array $data = [])
     {
         $this->dependencyResolver = new DependencyResolver();
+        parent::__construct($data);
     }
 
     /**
@@ -34,28 +38,24 @@ class RequestHandler
             $handler = get_request_handler($request);
             /** @var AbstractControllerInterface $controller */
             $controller = $this->dependencyResolver->resolve($handler);
-            $result = $controller->launch();
-            if ($result) {
-                echo $result;
-            }
+            echo $controller->launch();
         } catch (\Exception|TypeError|Throwable $e) {
             if (config('debug')) {
                 throw $e;
             }
-            $this->redirectPageNotFound($request);
+            echo $this->returnError($request);
         }
     }
 
     /**
-     * @return void
+     * @return string
      * @throws Exception
      */
-    protected function redirectPageNotFound(RequestInterface $request)
+    protected function returnError(RequestInterface $request)
     {
         if (config('site.notfound')) {
-            $this->dependencyResolver->resolve(config('site.notfound'))->launch();
-            return;
+            return $this->dependencyResolver->resolve(config('site.notfound'))->launch();
         }
-        (new AbstractFrontendController($request))->launch();
+        return (new AbstractFrontendController($request))->launch();
     }
 }

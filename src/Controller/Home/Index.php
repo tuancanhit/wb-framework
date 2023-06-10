@@ -2,9 +2,9 @@
 
 namespace William\Wb\Controller\Home;
 
-use William\Base\Api\PageResponse\ResponseInterface as PageResponseInterface;
-use William\Base\Api\RequestResponse\ResponseInterface as RequestResponseInterface;
+use William\Base\Api\PageResponse\Response;
 use William\Base\Controller\AbstractFrontendController;
+use William\Base\Controller\Request;
 
 /**
  * Class Index
@@ -13,11 +13,19 @@ use William\Base\Controller\AbstractFrontendController;
  */
 class Index extends AbstractFrontendController
 {
-    /**
-     * @return PageResponseInterface|RequestResponseInterface|\William\Base\Block\BlockInterface
-     */
-    function execute()
+    public function __construct
+    (
+        Request $request
+    )
     {
+        parent::__construct($request);
+    }
 
+    /**
+     * @return Response
+     */
+    public function execute()
+    {
+        return (new Response())->setVars([])->setTemplate('@app::base.php');
     }
 }

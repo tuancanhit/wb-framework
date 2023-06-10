@@ -1,5 +1,5 @@
 <?php
-/** @var  $vars */
+/** @var $block */
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -4,11 +4,12 @@ declare(strict_types=1);
 namespace William\Base\Helper;
 
 use William\Base\Exception\SystemInitFailureException;
+use William\Base\Model\AbstractInstance;
 
 /**
  * Class ConfigResolver
  */
-class TemplateResolver
+class TemplateResolver extends AbstractInstance
 {
     /** @var TemplateResolver|null */
     private static ?TemplateResolver $_instance = null;
@@ -25,15 +26,17 @@ class TemplateResolver
     /**
      * @param array $configs
      */
-    public function __construct(string $scope = '')
+    public function __construct(array $data = [], string $scope = '')
     {
-        $scope = $scope ? $scope : \William\Base\Helper\ScopeResolver::getInstance()->getScope();
-        if (!$scope) {
-            throw new SystemInitFailureException('Scope not found');
+        $scope   = $scope ? $scope : \William\Base\Helper\ScopeResolver::getInstance()->getScope();
+        $rootDir = \William\Base\Framework\HttpApplication::getInstance()->getBoot()->getRootDir();
+
+        if (!$scope || !$rootDir) {
+            throw new SystemInitFailureException('Scope or root dir not found');
         }
         $this->mappings = [
-            self::$_appTplPrefix => sprintf('%s/src/view/%s/', config('root_folder'), $scope),
-            self::$_coreTplPrefix => sprintf('%s/vendor/william/base/src/view/%s/', config('root_folder'), $scope)
+            self::$_appTplPrefix  => sprintf('%s/src/view/%s/', $rootDir, $scope),
+            self::$_coreTplPrefix => sprintf('%s/vendor/william/base/src/view/%s/', $rootDir, $scope)
         ];
 
         $tmpl = config('tmpl');
@@ -42,6 +45,7 @@ class TemplateResolver
         }
         uksort($this->mappings, [$this, 'strLenghtCompare']);
         self::$_instance = $this;
+        parent::__construct($data);
     }
 
     /**
@@ -50,7 +54,7 @@ class TemplateResolver
     public static function getInstance()
     {
         if (null == self::$_instance) {
-            throw new SystemInitFailureException('System have not int already');
+            throw new SystemInitFailureException('System have not init already');
         }
         return self::$_instance;
     }

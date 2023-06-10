@@ -18,7 +18,7 @@ $route_list    = array_merge($base_routes, $custom_routes);
 function get_request_handler(RequestInterface $request)
 {
     global $route_list;
-    $path = $request->getFullPath();
+    $path   = $request->getFullPath();
     $method = strtolower($request->getMethod());
     if (!$path || !isset($route_list[$path][$method])) {
         throw new RouteNotFoundException('Route not found');
