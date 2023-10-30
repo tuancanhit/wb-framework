@@ -1,0 +1,109 @@
+server {
+     listen 80;
+     server_name wb.local;
+     rewrite ^ https://wb.local$request_uri? permanent;
+ }
+
+server {
+    ssl_certificate localhost.crt;
+    ssl_certificate_key localhost.key;
+
+    listen 443 ssl http2;
+    server_name wb.local;
+
+    set $WB_ROOT /var/www/html;
+    root $WB_ROOT;
+    index index.php;
+
+    location ~ \.php$ {
+       fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+       fastcgi_pass   fastcgi_backend;
+       fastcgi_index  index.php;
+       fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+       include        fastcgi_params;
+    }
+
+    location / {
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+
+    location /pub {
+           location /css {
+               root $WB_ROOT;
+               # Serve static files directly
+               try_files $uri =404;
+
+               # Set cache expiry time to 1 hour
+               expires 1h;
+
+               # Set appropriate MIME type
+               add_header Content-Type "text/css";
+
+               # Enable caching for this location
+               add_header Cache-Control "public, max-age=3600";
+
+               # Disable access logging
+               access_log off;
+           }
+
+           location /js {
+                root $WB_ROOT;
+                # Serve static files directly
+                try_files $uri =404;
+
+                # Set cache expiry time to 1 hour
+                expires 1h;
+
+                # Set appropriate MIME type
+                add_header Content-Type "application/javascript";
+
+                # Enable caching for this location
+                add_header Cache-Control "public, max-age=3600";
+
+                # Disable access logging
+                access_log off;
+           }
+           location /media {
+               # Serve static files directly
+               try_files $uri =404;
+
+               # Set cache expiry time to 1 hour
+               expires 1h;
+
+               # Set appropriate MIME type based on file extension
+               types {
+                   image/jpeg jpg;
+                   image/png png;
+                   video/mp4 mp4;
+                   audio/mpeg mp3;
+                   # Add more MIME types as needed
+               }
+
+               # Enable caching for this location
+               add_header Cache-Control "public, max-age=3600";
+
+               # Disable access logging
+               access_log off;
+           }
+    }
+
+    location /pub {
+        deny all;
+    }
+
+    location /var/cache {
+        deny all;
+    }
+
+    location /pub/downloadable {
+        deny all;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+
+    location ~* (\.php$|\.phtml$|\.htaccess$|\.git) {
+        deny all;
+    }
+}

@@ -1,0 +1,8 @@
+/vendor/*
+!/vendor/wb.php
+/var/*
+!/var/.gitkeep
+/pub/*
+!/pub/.gitkeep
+/package/*
+!/package/.gitkeep

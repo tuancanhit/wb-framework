@@ -1,0 +1,32 @@
+{
+    "name": "william/wb",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Package\\": "package/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Nguyen Tuan Canh",
+            "email": "tuancanhit@gmail.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.8",
+        "monolog/monolog": "2.x-dev",
+        "william/core": "^1.0",
+        "william/cache": "^1.0"
+    },
+    "repositories": {
+        "william/core": {
+            "type": "path",
+            "url": "tmp/William/Core"
+        },
+        "william/cache": {
+            "type": "path",
+            "url": "3rd/William/Cache"
+        }
+    },
+    "minimum-stability": "stable"
+}
