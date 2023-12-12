@@ -7,3 +7,4 @@
 !/pub/.gitkeep
 /package/*
 !/package/.gitkeep
+!/package/etc/wb.php

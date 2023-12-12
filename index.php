@@ -5,7 +5,7 @@ use William\Core\Framework\Http\App;
 const WB_ROOT = __DIR__;
 try {
     require 'vendor/autoload.php';
-    require 'vendor/wb.php';
+    require 'package/etc/wb.php';
 } catch (\Exception $e) {
     echo <<<HTML
         <div style="font:12px/1.35em arial, helvetica, sans-serif;">
