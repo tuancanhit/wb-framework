@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c631faaa7a97fc01486e4611c834935f",
+    "content-hash": "0afb613c01b30e5e51a795d59240a1cb",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -817,15 +817,22 @@
         },
         {
             "name": "william/cache",
-            "version": "1.0.0",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tuancanhit/wb-cache.git",
+                "reference": "cfc9573c9188cc73ace0b8fe0496fb2de3995a1a"
+            },
             "dist": {
-                "type": "path",
-                "url": "tmp/William/Cache",
-                "reference": "794bf2d2a7ffbf1f8e63797652369b6d2243f5bb"
+                "type": "zip",
+                "url": "https://api.github.com/repos/tuancanhit/wb-cache/zipball/cfc9573c9188cc73ace0b8fe0496fb2de3995a1a",
+                "reference": "cfc9573c9188cc73ace0b8fe0496fb2de3995a1a",
+                "shasum": ""
             },
             "require": {
                 "predis/predis": "^2.1"
             },
+            "default-branch": true,
             "type": "project",
             "autoload": {
                 "psr-4": {
@@ -838,17 +845,25 @@
                     "email": "tuancanhit@gmail.com"
                 }
             ],
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "source": "https://github.com/tuancanhit/wb-cache/tree/v1.0.01",
+                "issues": "https://github.com/tuancanhit/wb-cache/issues"
+            },
+            "time": "2023-12-12T03:07:29+00:00"
         },
         {
             "name": "william/core",
             "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tuancanhit/wb-core.git",
+                "reference": "e2f2f746db97b143704b2ced12c79bf9a128d16f"
+            },
             "dist": {
-                "type": "path",
-                "url": "tmp/William/Core",
-                "reference": "b44391fbcc4cfec9d45e40b101681f25fcc70ac1"
+                "type": "zip",
+                "url": "https://api.github.com/repos/tuancanhit/wb-core/zipball/e2f2f746db97b143704b2ced12c79bf9a128d16f",
+                "reference": "e2f2f746db97b143704b2ced12c79bf9a128d16f",
+                "shasum": ""
             },
             "type": "project",
             "autoload": {
@@ -862,16 +877,19 @@
                     "email": "tuancanhit@gmail.com"
                 }
             ],
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "source": "https://github.com/tuancanhit/wb-core/tree/v1.0.0",
+                "issues": "https://github.com/tuancanhit/wb-core/issues"
+            },
+            "time": "2023-12-12T03:25:19+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "monolog/monolog": 20
+        "monolog/monolog": 20,
+        "william/cache": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

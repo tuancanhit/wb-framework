@@ -16,16 +16,16 @@
         "guzzlehttp/guzzle": "^7.8",
         "monolog/monolog": "2.x-dev",
         "william/core": "^1.0",
-        "william/cache": "^1.0"
+        "william/cache": "dev-main"
     },
     "repositories": {
         "william/core": {
-            "type": "path",
-            "url": "tmp/William/Core"
+            "type": "vcs",
+            "url": "https://github.com/tuancanhit/wb-core.git"
         },
         "william/cache": {
-            "type": "path",
-            "url": "tmp/William/Cache"
+            "type": "vcs",
+            "url": "https://github.com/tuancanhit/wb-cache.git"
         }
     },
     "minimum-stability": "stable"
