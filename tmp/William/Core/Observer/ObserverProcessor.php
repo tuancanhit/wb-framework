@@ -11,6 +11,8 @@ use William\Core\Api\Observer\ObserverInterface;
 
 /**
  * Class ObserverProcessor
+ *
+ * @package William\Core\Observer
  */
 class ObserverProcessor implements ObserverInterface
 {

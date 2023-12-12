@@ -5,12 +5,13 @@
  */
 declare(strict_types=1);
 
-namespace William\Core\Api;
+namespace William\Core\Api\Framework\Http;
 
 /**
  * Interface RequestInterface
  *
  * @api
+ * @package William\Core\Api\Request
  */
 interface RequestInterface
 {

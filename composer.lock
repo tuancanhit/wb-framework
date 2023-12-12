@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ca2957cf51e235b974516db2473c7bf9",
+    "content-hash": "c631faaa7a97fc01486e4611c834935f",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -337,12 +337,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "1b93764d154ba06b18fe11f252bf991b9ef9aa62"
+                "reference": "437cb3628f4cf6042cc10ae97fc2b8472e48ca1f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1b93764d154ba06b18fe11f252bf991b9ef9aa62",
-                "reference": "1b93764d154ba06b18fe11f252bf991b9ef9aa62",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/437cb3628f4cf6042cc10ae97fc2b8472e48ca1f",
+                "reference": "437cb3628f4cf6042cc10ae97fc2b8472e48ca1f",
                 "shasum": ""
             },
             "require": {
@@ -431,7 +431,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-06-22T06:44:58+00:00"
+            "time": "2023-10-27T15:25:26+00:00"
         },
         {
             "name": "predis/predis",
@@ -820,8 +820,8 @@
             "version": "1.0.0",
             "dist": {
                 "type": "path",
-                "url": "3rd/William/Cache",
-                "reference": "ea594a6f5ee4d89b38e987c762ace5c948bf0d88"
+                "url": "tmp/William/Cache",
+                "reference": "794bf2d2a7ffbf1f8e63797652369b6d2243f5bb"
             },
             "require": {
                 "predis/predis": "^2.1"
@@ -847,8 +847,8 @@
             "version": "1.0.0",
             "dist": {
                 "type": "path",
-                "url": "3rd/William/Core",
-                "reference": "2ed5f6f6bb6ff22c580fc33b5d2b2f5b9eb265d9"
+                "url": "tmp/William/Core",
+                "reference": "b44391fbcc4cfec9d45e40b101681f25fcc70ac1"
             },
             "type": "project",
             "autoload": {

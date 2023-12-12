@@ -7,21 +7,22 @@ declare(strict_types=1);
 
 namespace William\Core\Api\Route;
 
-use William\Core\Api\RequestInterface;
+use William\Core\Api\Framework\Http\RequestInterface;
+use William\Core\Model\DataObject;
 
 /**
  * Class Router
- * @method \Router get(string $route, string $handler, $middleware = null, bool $isAdmin = false)
- * @method \Router post(string $route, string $handler, $middleware = null, bool $isAdmin = false)
- * @method \Router put(string $route, string $handler, $middleware = null, bool $isAdmin = false)
- * @method \Router delete(string $route, string $handler, $middleware = null, bool $isAdmin = false)
+ * @method \William\Core\Api\Route\Router get(string $route, string $handler, $middleware = null, bool $isAdmin = false)
+ * @method \William\Core\Api\Route\Router post(string $route, string $handler, $middleware = null, bool $isAdmin = false)
+ * @method \William\Core\Api\Route\Router put(string $route, string $handler, $middleware = null, bool $isAdmin = false)
+ * @method \William\Core\Api\Route\Router delete(string $route, string $handler, $middleware = null, bool $isAdmin = false)
  *
  * @package William\Base\Route
  */
-class Router extends \Core\Model\DataObject
+class Router extends DataObject
 {
     protected array $routes = [];
-    protected static ?Router $instance = null;
+    protected static $instance = null;
 
     /**
      * @param string $method
@@ -32,8 +33,8 @@ class Router extends \Core\Model\DataObject
     public function __call($method, $args)
     {
         $methods = [RequestInterface::GET, RequestInterface::POST, RequestInterface::PUT, RequestInterface::DELETE];
-        $methods = array_map('strtolower', $methods);
-        $method = strtolower($method);
+        $methods = array_map('strtoupper', $methods);
+        $method  = strtoupper($method);
         if (!in_array($method, $methods)) {
             throw new \Exception(sprintf('Method not found in %s', get_class($this)));
         }
@@ -65,10 +66,10 @@ class Router extends \Core\Model\DataObject
         if ('/' != $route) {
             $route = trim($route, '/');
         }
-        $route = self::buildFullPath($route);
+        $route = static::buildFullPath($route);
         if ($isAdmin) {
             $prefix = strtolower(config('admin.front_name', 'admin'));
-            $route = sprintf('%s/%s', $prefix, $route == '/' ? '' : $route);
+            $route  = sprintf('%s/%s', $prefix, $route == '/' ? '' : $route);
         }
         if ('/' != $route) {
             $route = trim($route, '/');
@@ -78,31 +79,12 @@ class Router extends \Core\Model\DataObject
         }
         $this->routes[$route][$method]['handler'] = $handler;
         if ($middleware) {
+            if (!is_array($middleware)) {
+                $middleware = [$middleware];
+            }
             $this->routes[$route][$method]['middleware'] = $middleware;
         }
         return $this;
-    }
-
-    /**
-     * @param string $route
-     * @param string $method
-     * @return mixed
-     * @throws \Exception
-     */
-    public function getHandler(string $route, string $method)
-    {
-        if (!isset($this->routes[$route][$method])) {
-            throw new \Exception('Route not found');
-        }
-        return $this->routes[$route][$method];
-    }
-
-    /**
-     * @return array
-     */
-    public function getRoutes()
-    {
-        return $this->routes;
     }
 
     /**
@@ -121,5 +103,13 @@ class Router extends \Core\Model\DataObject
         }
 
         return implode('/', $path);
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoutes(): array
+    {
+        return $this->routes;
     }
 }

@@ -15,7 +15,6 @@
     "require": {
         "predis/predis": "^2.1"
     },
-    "repositories": {},
     "version": "1.0.0",
     "minimum-stability": "stable"
 }

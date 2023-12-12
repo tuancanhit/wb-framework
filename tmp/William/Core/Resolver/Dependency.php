@@ -6,11 +6,11 @@ use Exception;
 use ReflectionClass;
 
 /**
- * Class DependencyResolver
+ * Class Dependency
  *
  * @package William\Base
  */
-class DependencyResolver
+class Dependency
 {
     /** @var null | $this */
     public static $_instance = null;
@@ -22,7 +22,7 @@ class DependencyResolver
     private array $references = [];
 
     /**
-     * @return DependencyResolver|null
+     * @return Dependency
      */
     public static function getInstance()
     {
@@ -46,30 +46,6 @@ class DependencyResolver
     }
 
     /**
-     * @return $this
-     */
-    public function clearDependencyArgs()
-    {
-        $self = $this->dependencies[self::class] ?: null;
-        $this->dependencies = [];
-        if ($self) {
-            $this->dependencies[self::class] = $self;
-        }
-        return $this;
-    }
-
-    /**
-     * @param string $name
-     * @param mixed  $value
-     * @return $this
-     */
-    public function replaceDependencyArgs(string $name, $value)
-    {
-        $this->dependencies[$name] = $value;
-        return $this;
-    }
-
-    /**
      * @param string $className
      * @return mixed|object|null
      * @throws \ReflectionException
@@ -77,7 +53,7 @@ class DependencyResolver
      */
     public function resolve(string $className)
     {
-        return $this->_resolve(...func_get_args());
+        return $this->_resolve($className);
     }
 
     /**
@@ -88,7 +64,8 @@ class DependencyResolver
      */
     protected function _resolve(string $className)
     {
-        $reflection = new ReflectionClass($className);
+        $className   = $this->getPreference($className);
+        $reflection  = new ReflectionClass($className);
         $constructor = $reflection->getConstructor();
         if (!$constructor) {
             return new $className();
@@ -142,28 +119,27 @@ class DependencyResolver
     /**
      * @param string $ref
      * @return string
+     * @throws Exception
      */
     protected function getPreference(string $ref)
     {
         $references = $this->getPreferences();
         if (!empty($references[$ref])) {
-            return $references[$ref];
+            return (string)$references[$ref];
         }
         return $ref;
     }
 
     /**
      * @return array
+     * @throws Exception
      */
     protected function getPreferences()
     {
         if (empty($this->references)) {
-            $this->references = GlobalRequireResolver::getInstance(WB_ROOT)
-                ->setIdentifier(self::class)
-                ->execute(
-                    '/vendor/william/*/etc/di.php',
-                    '/package/*/etc/di.php'
-                );
+            $this->references = GlobalRequire::getInstance(WB_ROOT)
+                ->setIdentifier('di_preference')
+                ->execute();
         }
         return $this->references;
     }

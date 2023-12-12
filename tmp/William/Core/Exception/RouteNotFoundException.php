@@ -5,14 +5,12 @@
  */
 declare(strict_types=1);
 
-namespace William\Core\Api;
+namespace William\Core\Exception;
 
 /**
- * Interface RequestInterface
- *
- * @api
+ * Class RouteNotFoundException
  */
-interface ResponseInterface
+class RouteNotFoundException extends \Exception
 {
-    public function toResponse();
+
 }

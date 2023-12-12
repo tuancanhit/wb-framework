@@ -13,7 +13,6 @@
         }
     ],
     "require": {},
-    "repositories": {},
     "version": "1.0.0",
     "minimum-stability": "stable"
 }

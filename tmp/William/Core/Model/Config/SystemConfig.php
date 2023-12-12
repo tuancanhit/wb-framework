@@ -16,16 +16,14 @@ use William\Core\Model\DataObject;
 class SystemConfig extends DataObject
 {
     protected array $configs = [];
+    protected static $instance = null;
 
     /**
      * @param array $data
      */
     public function __construct(array $data = [])
     {
-        $this->configs = GlobalRequire::getInstance()->execute(
-            '/vendor/william/*/etc/config.php',
-            '/package/*/etc/config.php'
-        );
+        $this->configs = GlobalRequire::getInstance()->setIdentifier('config')->execute('');
         parent::__construct(array_merge($this->configs, $data));
     }
 
@@ -45,8 +43,11 @@ class SystemConfig extends DataObject
      * @param mixed  $default
      * @return int|string|null
      */
-    public function getConfig(string $path, $default = null)
+    public function getConfig(string $path = '', $default = null)
     {
+        if (!$path) {
+            return self::getInstance()->getData();
+        }
         $path = str_replace('.', '/', $path);
         $config = self::getInstance()->getDataByPath($path);
         if (null == $config) {

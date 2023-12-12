@@ -15,5 +15,11 @@ namespace William\Cache\Api;
 interface CacheInterface
 {
     public function get(string $key);
+
     public function set(string $key, $value);
+
+    public function getCacheVersion(): int;
+
+    public function getCachePrefix(): string;
+
 }

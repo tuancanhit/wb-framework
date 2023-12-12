@@ -15,8 +15,6 @@ namespace William\Core\Model;
 //class DataObject implements \ArrayAccess
 class DataObject
 {
-    protected static $instance = null;
-
     /**
      * Object attributes
      *
@@ -40,8 +38,15 @@ class DataObject
      */
     public function __construct(array $data = [])
     {
+        $this->beforeConstruct(...func_get_args());
         $this->_data = $data;
+        $this->afterConstruct(...func_get_args());
     }
+
+    protected function afterConstruct(...$args)
+    {}
+    protected function beforeConstruct(...$args)
+    {}
 
     /**
      * Add data to the object.

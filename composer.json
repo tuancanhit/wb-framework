@@ -25,7 +25,7 @@
         },
         "william/cache": {
             "type": "path",
-            "url": "3rd/William/Cache"
+            "url": "tmp/William/Cache"
         }
     },
     "minimum-stability": "stable"

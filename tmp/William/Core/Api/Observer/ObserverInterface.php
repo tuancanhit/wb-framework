@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © SmartOSC, Inc. All rights reserved.
+ * Copyright © Will, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 declare(strict_types=1);

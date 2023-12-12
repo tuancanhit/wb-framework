@@ -1,6 +1,7 @@
+#!/usr/bin/env php
 <?php
 
-use William\Core\Framework\Http\App;
+use William\Core\Framework\Console\CliCommandProcessor;
 
 const WB_ROOT = __DIR__;
 try {
@@ -18,5 +19,6 @@ try {
         HTML;
     exit(1);
 }
-$application = new App(['wb_root' => WB_ROOT]);
-$application->run();
+
+$application = new CliCommandProcessor(['wb_root' => WB_ROOT]);
+$application->run($argv, $argc);
